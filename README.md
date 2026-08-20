@@ -30,6 +30,7 @@
 - [MVP Backlog](docs/02-mvp-backlog.md)
 - [Database Index Learning Pack](docs/03-learning-pack-database-index.md)
 - [核心数据契约](docs/04-contracts.md)
+- [知乎开放平台接入与 OAuth 回调](docs/05-zhihu-integration.md)
 
 ## Scope Freeze
 

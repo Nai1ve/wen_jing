@@ -1,0 +1,11 @@
+# 稳定回调地址的 Cloudflare Tunnel 配置示例。
+# 先执行：cloudflared tunnel create wenjing-zhihu
+# 再把下面的 tunnel、credentials-file 和 hostname 换成你的值。
+
+tunnel: YOUR_TUNNEL_ID
+credentials-file: /Users/YOUR_USER/.cloudflared/YOUR_TUNNEL_ID.json
+
+ingress:
+  - hostname: zhihu-auth.example.com
+    service: http://127.0.0.1:8787
+  - service: http_status:404
