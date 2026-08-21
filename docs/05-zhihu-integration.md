@@ -39,10 +39,13 @@ uv run wenjing-zhihu status
 
 ```bash
 uv run wenjing-zhihu data search "联合索引" --count 3
+uv run wenjing-zhihu data global-search "联合索引" --count 5 --search-db all
 uv run wenjing-zhihu serve --host 127.0.0.1 --port 8787
 curl http://127.0.0.1:8787/health
 curl http://127.0.0.1:8787/zhihu/status
 ```
+
+全网搜索还支持 `--filter` 高级筛选；`host=="zhihu.com"` 不被全网索引接受，知乎站内内容请使用 `data search`。
 
 ## OAuth 流程
 

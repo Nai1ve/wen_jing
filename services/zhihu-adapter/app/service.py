@@ -94,7 +94,7 @@ class ZhihuService:
     def search(self, query: str, count: int = 10) -> list[dict[str, Any]]:
         if not query.strip():
             raise ZhihuInvalidRequest("query is required")
-        normalized = min(max(count, 1), 50)
+        normalized = min(max(count, 1), 10)
         raw = (
             self.clients.data.get("/api/v1/content/zhihu_search", {"Query": query, "Count": normalized})
             if self.settings.live
@@ -102,12 +102,25 @@ class ZhihuService:
         )
         return mappers.map_search(raw, source_type="zhihu_search")[:normalized]
 
-    def global_search(self, query: str, count: int = 10) -> list[dict[str, Any]]:
+    def global_search(
+        self,
+        query: str,
+        count: int = 10,
+        filter_expr: str | None = None,
+        search_db: str | None = None,
+    ) -> list[dict[str, Any]]:
         if not query.strip():
             raise ZhihuInvalidRequest("query is required")
-        normalized = min(max(count, 1), 50)
+        normalized = min(max(count, 1), 20)
+        params: dict[str, Any] = {"Query": query, "Count": normalized}
+        if filter_expr:
+            params["Filter"] = filter_expr
+        if search_db:
+            if search_db not in {"all", "realtime", "static"}:
+                raise ZhihuInvalidRequest("search_db must be all, realtime, or static")
+            params["SearchDB"] = search_db
         raw = (
-            self.clients.data.get("/api/v1/content/global_search", {"Query": query, "Count": normalized})
+            self.clients.data.get("/api/v1/content/global_search", params)
             if self.settings.live
             else mock_data.search(query, normalized)
         )

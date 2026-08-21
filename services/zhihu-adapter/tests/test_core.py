@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 from app.config import CommunityConfig, DataPlatformConfig, OAuthConfig, Settings
-from app.errors import OAuthStateError, ZhihuAuthError, ZhihuRingNotWritable
+from app.errors import OAuthStateError, ZhihuAuthError, ZhihuInvalidRequest, ZhihuRingNotWritable
 from app.mappers import map_comments, map_search, map_story_detail, map_story_list
 from app.security import build_community_sign_string, sign_community_request
 from app.service import OAuthStateStore, ZhihuService
@@ -159,6 +159,11 @@ class ClientTests(unittest.TestCase):
         service = ZhihuService(settings())
         with self.assertRaises(ZhihuRingNotWritable):
             service.publish_pin({"ring_id": "unknown", "content": "test"})
+
+    def test_global_search_rejects_unknown_search_db(self):
+        service = ZhihuService(settings())
+        with self.assertRaises(ZhihuInvalidRequest):
+            service.global_search("索引", search_db="unknown")
 
 
 if __name__ == "__main__":

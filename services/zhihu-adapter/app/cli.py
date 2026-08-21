@@ -62,6 +62,8 @@ def build_parser() -> argparse.ArgumentParser:
     data_global = data_sub.add_parser("global-search")
     data_global.add_argument("query")
     data_global.add_argument("--count", type=int, default=10)
+    data_global.add_argument("--filter", dest="filter_expr")
+    data_global.add_argument("--search-db", choices=("all", "realtime", "static"))
     data_answer = data_sub.add_parser("answer")
     data_answer.add_argument("query")
     data_answer.add_argument("--model")
@@ -163,7 +165,7 @@ def run(args: argparse.Namespace) -> int:
         elif args.data_command == "search":
             _json(service.search(args.query, args.count))
         elif args.data_command == "global-search":
-            _json(service.global_search(args.query, args.count))
+            _json(service.global_search(args.query, args.count, args.filter_expr, args.search_db))
         elif args.data_command == "answer":
             payload = {"messages": [{"role": "user", "content": args.query}]}
             if args.model:

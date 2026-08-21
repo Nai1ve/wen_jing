@@ -48,14 +48,19 @@ def hot_list(limit: int = Query(30, ge=1, le=50)) -> dict[str, Any]:
 
 @app.get("/zhihu/zhihu-search")
 @app.get("/zhihu/data/search")
-def search(query: str = Query(..., min_length=1), count: int = Query(10, ge=1, le=50)) -> dict[str, Any]:
+def search(query: str = Query(..., min_length=1), count: int = Query(10, ge=1, le=10)) -> dict[str, Any]:
     return {"ok": True, "data": _call(lambda: service.search(query, count))}
 
 
 @app.get("/zhihu/global-search")
 @app.get("/zhihu/data/global-search")
-def global_search(query: str = Query(..., min_length=1), count: int = Query(10, ge=1, le=50)) -> dict[str, Any]:
-    return {"ok": True, "data": _call(lambda: service.global_search(query, count))}
+def global_search(
+    query: str = Query(..., min_length=1),
+    count: int = Query(10, ge=1, le=20),
+    filter_expr: str | None = Query(None, alias="Filter"),
+    search_db: str | None = Query(None, alias="SearchDB"),
+) -> dict[str, Any]:
+    return {"ok": True, "data": _call(lambda: service.global_search(query, count, filter_expr, search_db))}
 
 
 @app.post("/zhihu/direct-answer")
